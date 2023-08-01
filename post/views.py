@@ -18,7 +18,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return PostSerializer
 
     def get_permissions(self):
-        if self.action in ["update", "destroy", "partial_update"]:
+        if self.action in ["get", "create", "update", "destroy", "partial_update"]:
             return [IsAdminUser()]
         return []
     
@@ -42,7 +42,7 @@ class CommentViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.
     serializer_class = CommentSerializer
 
     def get_permissions(self):
-        if self.action in ["update", "destroy", "partial_update"]:
+        if self.action in ["get", "update", "destroy", "partial_update"]:
             return [IsOwnerOrReadOnly()]
         return []
     
@@ -60,6 +60,11 @@ class PostCommentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.
         queryset = Comment.objects.filter(post_id=post)
         return queryset
     
+    def get_permissions(self):
+        if self.action in ["get", "create", "update", "destroy", "partial_update"]:
+            return [IsAdminUser()]
+        return []
+        
     def create(self, request, post_id=None):
         post = get_object_or_404(Post, id=post_id)
         serializer = self.get_serializer(data=request.data)
