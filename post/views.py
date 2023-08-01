@@ -18,7 +18,7 @@ class PostViewSet(viewsets.ModelViewSet):
         return PostSerializer
 
     def get_permissions(self):
-        if self.action in ["get", "create", "update", "destroy", "partial_update"]:
+        if self.action in ["create", "update", "destroy", "partial_update"]:
             return [IsAdminUser()]
         return []
     
@@ -61,10 +61,10 @@ class PostCommentViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.
         return queryset
     
     def get_permissions(self):
-        if self.action in ["get", "create", "update", "destroy", "partial_update"]:
+        if self.action in ["list", "create"]:
             return [IsAdminUser()]
         return []
-        
+
     def create(self, request, post_id=None):
         post = get_object_or_404(Post, id=post_id)
         serializer = self.get_serializer(data=request.data)
